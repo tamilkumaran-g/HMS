@@ -13,8 +13,8 @@ const Header = () => {
           Digital Twin Coordinator
         </h1>
         <p className="max-w-2xl text-base sm:text-lg text-slate-200">
-          AI-powered real-time bed allocation across Chennai, with live
-          occupancy, admissions, and negotiation visibility.
+          AI-powered bed allocation across Chennai with occupancy,
+          admissions, and negotiation visibility.
         </p>
       </div>
     </header>

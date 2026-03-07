@@ -12,7 +12,6 @@ import AdmissionForm from "./components/AdmissionForm";
 import NewAdmission from "./components/NewAdmission";
 import BedAllocationNotifications from "./components/BedAllocationNotifications";
 import NegotiationLog from "./components/NegotiationLog";
-import LiveStatus from "./components/LiveStatus";
 import ErrorBoundary from "./components/ErrorBoundary";
 import LoginPage from "./components/LoginPage";
 import PrivateRoute from "./components/PrivateRoute";
@@ -28,7 +27,7 @@ import {
 
 // Authenticated Dashboard Component
 const AuthenticatedDashboard = () => {
-  const { hospitals, beds, loading, error } = useHospitalData();
+  const { hospitals, beds, loading, error, refreshData } = useHospitalData();
   const [admitResult, setAdmitResult] = useState(null);
   const [admitLoading, setAdmitLoading] = useState(false);
   const [admitError, setAdmitError] = useState("");
@@ -99,7 +98,7 @@ const AuthenticatedDashboard = () => {
     try {
       const data = await getNotifications();
       setNotifications(data.notifications || []);
-    } catch (err) {
+    } catch {
       // Silent fail to avoid noisy UI for transient polling errors
     } finally {
       setNotificationsLoading(false);
@@ -119,6 +118,8 @@ const AuthenticatedDashboard = () => {
     try {
       const result = await admitPatient(payload);
       setAdmitResult(result);
+      await refreshData();
+      await loadNotifications();
     } catch (err) {
       setAdmitError(err?.message || "Admission failed");
     } finally {
@@ -135,6 +136,7 @@ const AuthenticatedDashboard = () => {
         setBookingMessage(
           "✅ Bed booked successfully! The dashboard will update shortly.",
         );
+        await refreshData();
         setTimeout(() => {
           setBookingMessage("");
         }, 3000);
@@ -154,6 +156,7 @@ const AuthenticatedDashboard = () => {
       console.log(`📙 Approving notification: ${notificationId}`);
       const result = await approveNotification(notificationId);
       console.log("✅ Approval response:", result);
+      await refreshData();
       await loadNotifications();
     } catch (err) {
       console.error("❌ Approval failed:", err);
@@ -169,6 +172,7 @@ const AuthenticatedDashboard = () => {
       console.log(`🗑️ Rejecting notification: ${notificationId}`);
       const result = await rejectNotification(notificationId);
       console.log("✅ Rejection response:", result);
+      await refreshData();
       await loadNotifications();
     } catch (err) {
       console.error("❌ Rejection failed:", err);
@@ -189,10 +193,6 @@ const AuthenticatedDashboard = () => {
       <div className="grid gap-6 lg:grid-cols-2">
         <CapacityChart data={capacityData} />
         <BedTypeChart data={bedTypeData} />
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-1">
-        <LiveStatus />
       </div>
 
       {/* Admission form merged into BedBookingInterface - commenting out */}
