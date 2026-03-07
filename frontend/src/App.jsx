@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 import MetricsRow from "./components/MetricsRow";
 import BedStatusChart from "./components/BedStatusChart";
 import BedTypeChart from "./components/BedTypeChart";
-import CapacityChart from "./components/CapacityChart";
 import BedBookingInterface from "./components/BedBookingInterface";
 import AdmissionForm from "./components/AdmissionForm";
 import NewAdmission from "./components/NewAdmission";
@@ -90,8 +89,6 @@ const AuthenticatedDashboard = () => {
       hospitals: Object.values(t.hospitals),
     }));
   }, [beds, hospitals]);
-
-  const capacityData = stats;
 
   const loadNotifications = useCallback(async () => {
     setNotificationsLoading(true);
@@ -191,7 +188,6 @@ const AuthenticatedDashboard = () => {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <CapacityChart data={capacityData} />
         <BedTypeChart data={bedTypeData} />
       </div>
 

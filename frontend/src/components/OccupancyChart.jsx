@@ -34,7 +34,7 @@ const OccupancyChart = ({ data }) => {
             </div>
             <div className="h-8 w-full bg-slate-700/40 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-300"
+                className="h-full bg-linear-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-300"
                 style={{ width: `${item.occupancy}%` }}
               />
             </div>
