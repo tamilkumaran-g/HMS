@@ -4,7 +4,6 @@ import "./App.css";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import MetricsRow from "./components/MetricsRow";
-import OccupancyChart from "./components/OccupancyChart";
 import BedStatusChart from "./components/BedStatusChart";
 import BedTypeChart from "./components/BedTypeChart";
 import CapacityChart from "./components/CapacityChart";
@@ -60,11 +59,6 @@ const AuthenticatedDashboard = () => {
       };
     });
   }, [hospitals, beds]);
-
-  const occupancyData = stats.map((stat) => ({
-    name: stat.name,
-    occupancy: stat.occupancy,
-  }));
 
   const bedStatusData = useMemo(() => {
     const available = beds.filter((b) => b.status === "available").length;
@@ -188,8 +182,7 @@ const AuthenticatedDashboard = () => {
     <>
       <MetricsRow stats={stats} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <OccupancyChart data={occupancyData} />
+      <div className="grid gap-6 lg:grid-cols-1">
         <BedStatusChart data={bedStatusData} />
       </div>
 
