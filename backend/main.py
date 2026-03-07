@@ -1,19 +1,15 @@
 # backend/main.py - FIXED VERSION
 import os
 import sys
-import asyncio
-import json
 from datetime import datetime, timedelta
-from decimal import Decimal
 from typing import List, Dict, Optional
 
 # FIX: Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import random
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -42,8 +38,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-websocket_connections: List[WebSocket] = []
 
 # Notifications are now persisted in database (see database.py)
 
@@ -676,143 +670,12 @@ async def book_bed(
             detail=str(e)
         )
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    try:
-        await websocket.accept()
-        websocket_connections.append(websocket)
-        print(f"✅ WebSocket client connected. Total connections: {len(websocket_connections)}")
-        
-        while True:
-            await asyncio.sleep(1)
-    except Exception as e:
-        print(f"❌ WebSocket connection error: {e}")
-        if websocket in websocket_connections:
-            websocket_connections.remove(websocket)
-        print(f"WebSocket client disconnected. Total connections: {len(websocket_connections)}")
-    except WebSocketDisconnect:
-        if websocket in websocket_connections:
-            websocket_connections.remove(websocket)
-        print(f"❌ WebSocket client disconnected. Total connections: {len(websocket_connections)}")
-
-async def broadcast_data():
-    print("📡 Starting WebSocket broadcast task...")
-    while True:
-        try:
-            hospitals = db.get_hospitals()
-            beds = db.get_beds()
-            
-            # Convert datetime and Decimal objects to strings for JSON serialization
-            def convert_dates(obj):
-                if isinstance(obj, dict):
-                    return {k: convert_dates(v) for k, v in obj.items()}
-                elif isinstance(obj, list):
-                    return [convert_dates(item) for item in obj]
-                elif isinstance(obj, datetime):
-                    return obj.isoformat()
-                elif isinstance(obj, Decimal):
-                    return float(obj)
-                else:
-                    return obj
-            
-            data = {
-                "hospitals": convert_dates([dict(h) for h in hospitals]),
-                "beds": convert_dates([dict(b) for b in beds]),
-                "timestamp": datetime.now().isoformat()
-            }
-            print(f"📤 Broadcasting to {len(websocket_connections)} clients: {len(hospitals)} hospitals, {len(beds)} beds")
-            disconnected = []
-            for ws in websocket_connections:
-                try:
-                    await ws.send_text(json.dumps(data))
-                except Exception as e:
-                    print(f"❌ Error sending to client: {type(e).__name__}: {e}")
-                    disconnected.append(ws)
-            
-            # Remove disconnected clients
-            for ws in disconnected:
-                if ws in websocket_connections:
-                    websocket_connections.remove(ws)
-                    print(f"Removed disconnected WebSocket. Total connections: {len(websocket_connections)}")
-        except Exception as e:
-            print(f"❌ Broadcast error: {e}")
-            import traceback
-            traceback.print_exc()
-        await asyncio.sleep(10)
-
-async def simulate_bed_changes():
-    """
-    Background task to simulate hospital bed status changes every 30 seconds.
-    - Randomly changes status of 5 beds per hospital
-    - Simulates discharge (occupied → cleaning)
-    - Simulates cleaning completion (cleaning → available)
-    """
-    print("🔄 Starting bed status simulation task...")
-    await asyncio.sleep(10)  # Wait 10 seconds before starting
-    
-    while True:
-        try:
-            hospitals = db.get_hospitals()
-            
-            for hospital in hospitals:
-                hospital_id = hospital["id"]
-                # Get all beds for this hospital
-                all_beds = db.get_beds(hospital_id)
-                
-                if not all_beds:
-                    continue
-                
-                # Randomly select 5 beds to change (or less if fewer beds exist)
-                num_beds_to_change = min(5, len(all_beds))
-                beds_to_change = random.sample(all_beds, num_beds_to_change)
-                
-                for bed in beds_to_change:
-                    current_status = bed["status"]
-                    
-                    # Simulate status transitions
-                    if current_status == "occupied":
-                        # 50% chance: occupied → cleaning (discharge)
-                        if random.random() < 0.5:
-                            eta_clean = random.randint(15, 45)  # 15-45 minutes cleaning
-                            db.update_bed(bed["id"], "cleaning", "", eta_clean)
-                            print(f"🔄 {hospital_id}: {bed['id']} occupied → cleaning (ETA: {eta_clean}min)")
-                    
-                    elif current_status == "cleaning":
-                        # 70% chance: cleaning → available (cleaning complete)
-                        if random.random() < 0.7:
-                            db.update_bed(bed["id"], "available", "", 0)
-                            print(f"✨ {hospital_id}: {bed['id']} cleaning → available")
-                    
-                    elif current_status == "available":
-                        # 30% chance: available → occupied (new patient)
-                        if random.random() < 0.3:
-                            # Generate random patient name
-                            first_names = ["John", "Mary", "James", "Patricia", "Robert", "Jennifer", 
-                                         "Michael", "Linda", "William", "Elizabeth"]
-                            last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", 
-                                        "Miller", "Davis", "Rodriguez", "Martinez"]
-                            patient_name = f"{random.choice(first_names)} {random.choice(last_names)}"
-                            db.update_bed(bed["id"], "occupied", patient_name, 0)
-                            print(f"🏥 {hospital_id}: {bed['id']} available → occupied ({patient_name})")
-            
-            print(f"✅ Bed simulation cycle complete at {datetime.now().strftime('%H:%M:%S')}")
-            
-        except Exception as e:
-            print(f"❌ Simulation error: {e}")
-            import traceback
-            traceback.print_exc()
-        
-        # Wait 30 seconds before next simulation cycle
-        await asyncio.sleep(30)
-
 @app.on_event("startup")
 async def startup():
-    print("🚀 Starting Hospital Digital Twin...")
+    print("🚀 Starting Hospital Digital Twin API...")
     try:
         hospitals = db.get_hospitals()
         print(f"✅ Found {len(hospitals)} hospitals: {[h['name'] for h in hospitals]}")
-        asyncio.create_task(broadcast_data())
-        asyncio.create_task(simulate_bed_changes())  # Start simulation task
     except Exception as e:
         print(f"❌ Startup error: {e}")
 
