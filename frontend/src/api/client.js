@@ -96,3 +96,12 @@ export const getDoctors = async (params = {}) => {
   const data = await jsonFetch(path);
   return data.doctors || [];
 };
+
+export const dischargeBed = async (bedId) =>
+  jsonFetch(`/api/beds/${bedId}/discharge`, { method: "POST" });
+
+export const setBedCleaning = async (bedId) =>
+  jsonFetch(`/api/beds/${bedId}/set-cleaning`, { method: "POST" });
+
+export const setBedAvailable = async (bedId) =>
+  jsonFetch(`/api/beds/${bedId}/set-available`, { method: "POST" });

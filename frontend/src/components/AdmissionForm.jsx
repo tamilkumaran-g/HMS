@@ -19,16 +19,16 @@ const AdmissionForm = ({ onAdmit, loading, error }) => {
   };
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white">
-      <h2 className="text-xl font-semibold">New Admission</h2>
-      <p className="text-sm text-slate-300">Start an AI-guided bed search.</p>
+    <section className="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 className="text-xl font-semibold text-slate-800">New Admission</h2>
+      <p className="text-sm text-slate-500">Start an AI-guided bed search.</p>
       <form className="mt-4 grid gap-4" onSubmit={handleSubmit}>
         <label className="grid gap-2 text-sm">
           Patient name
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2 text-white"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800"
             required
           />
         </label>
@@ -37,7 +37,7 @@ const AdmissionForm = ({ onAdmit, loading, error }) => {
           <select
             value={condition}
             onChange={(event) => setCondition(event.target.value)}
-            className="rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2 text-white"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800"
           >
             <option>Cardiology</option>
             <option>Neurology</option>
@@ -51,7 +51,7 @@ const AdmissionForm = ({ onAdmit, loading, error }) => {
           <select
             value={bedType}
             onChange={(event) => setBedType(event.target.value)}
-            className="rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2 text-white"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800"
           >
             <option>ICU</option>
             <option>General</option>
@@ -66,7 +66,7 @@ const AdmissionForm = ({ onAdmit, loading, error }) => {
               step="0.001"
               value={lat}
               onChange={(event) => setLat(event.target.value)}
-              className="rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2 text-white"
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800"
             />
           </label>
           <label className="grid gap-2 text-sm">
@@ -76,19 +76,19 @@ const AdmissionForm = ({ onAdmit, loading, error }) => {
               step="0.001"
               value={lng}
               onChange={(event) => setLng(event.target.value)}
-              className="rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2 text-white"
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800"
             />
           </label>
         </div>
         <button
           type="submit"
-          className="rounded-2xl bg-amber-400 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={loading}
         >
           {loading ? "Negotiating..." : "Find Bed"}
         </button>
         {error ? (
-          <div className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
+          <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
             {error}
           </div>
         ) : null}

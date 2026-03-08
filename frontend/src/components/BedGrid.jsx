@@ -1,5 +1,7 @@
 import React from "react";
-import { CircleCheck, CircleX, CircleDashed, Circle } from "lucide-react";
+import { motion as Motion } from "framer-motion";
+import { BedDouble, User, SprayCan } from "lucide-react";
+import Badge from "./ui/Badge";
 
 const BedGrid = ({
   beds,
@@ -19,75 +21,83 @@ const BedGrid = ({
   const getBedIcon = (status) => {
     switch (status) {
       case "available":
-        return <CircleCheck className="w-5 h-5 text-emerald-500" />;
+        return <BedDouble className="w-5 h-5 text-green-600" />;
       case "occupied":
-        return <CircleX className="w-5 h-5 text-rose-500" />;
+        return <User className="w-5 h-5 text-red-500" />;
       case "cleaning":
-        return <CircleDashed className="w-5 h-5 text-amber-500" />;
+        return <SprayCan className="w-5 h-5 text-amber-500" />;
       default:
-        return <Circle className="w-5 h-5 text-slate-500" />;
+        return <BedDouble className="w-5 h-5 text-slate-400" />;
     }
   };
 
   const getBedColor = (status, isSelected) => {
-    if (isSelected) return "ring-2 ring-amber-400 bg-amber-500/20";
+    if (isSelected) {
+      return "border-indigo-400 bg-indigo-50 shadow-[0_0_0_1px_rgba(79,70,229,0.25)]";
+    }
+
     switch (status) {
       case "available":
-        return "bg-emerald-500/20 hover:bg-emerald-500/30 cursor-pointer";
+        return "border-green-200 bg-green-50 hover:bg-green-100 cursor-pointer";
       case "occupied":
-        return "bg-rose-500/10 opacity-60 cursor-not-allowed";
+        return "border-red-200 bg-red-50 hover:bg-red-100 cursor-pointer";
       case "cleaning":
-        return "bg-amber-500/10 opacity-60 cursor-not-allowed";
+        return "border-amber-200 bg-amber-50 hover:bg-amber-100 cursor-pointer";
       default:
-        return "bg-slate-500/10";
+        return "border-slate-200 bg-slate-50";
     }
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{wardType} Ward</h3>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-lg font-semibold">{wardType} Ward Seat Map</h3>
         <p className="text-xs text-slate-400">
           {beds.filter((b) => b.status === "available").length} of {beds.length}{" "}
           available
         </p>
       </div>
 
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
-        {beds.map((bed) => (
-          <button
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8 xl:grid-cols-10">
+        {beds.map((bed, idx) => (
+          <Motion.button
             key={bed.id}
-            onClick={() =>
-              bed.status === "available" && onSelectBed(bed.id, bed)
-            }
-            disabled={bed.status !== "available"}
-            className={`rounded-xl p-3 border border-white/10 transition-all aspect-square flex flex-col items-center justify-center gap-1 ${getBedColor(
+            onClick={() => onSelectBed(bed.id, bed)}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.01, duration: 0.2 }}
+            whileHover={{ scale: 1.05, y: -2 }}
+            className={`group relative aspect-square rounded-xl border p-2 transition-all ${getBedColor(
               bed.status,
               selectedBedId === bed.id,
             )}`}
-            title={`${bed.id} (${bed.status})`}
+            title={`${bed.id} (${bed.status})${bed.occupant ? ` - ${bed.occupant}` : ""}`}
           >
-            {getBedIcon(bed.status)}
-            <span className="text-xs font-medium truncate w-full text-center">
+            <div className="mb-1">{getBedIcon(bed.status)}</div>
+            <span className="w-full truncate text-center text-[10px] font-semibold sm:text-[11px]">
               {bed.id}
             </span>
-          </button>
+
+            <div className="pointer-events-none absolute -top-3 left-1/2 z-20 hidden w-44 -translate-x-1/2 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-left text-[10px] text-slate-600 shadow-lg group-hover:block">
+              <p className="font-semibold">{bed.id}</p>
+              <p>Status: {bed.status}</p>
+              {bed.occupant ? <p>Occupant: {bed.occupant}</p> : null}
+              {bed.eta_clean ? <p>ETA clean: {bed.eta_clean} min</p> : null}
+            </div>
+          </Motion.button>
         ))}
       </div>
 
-      <div className="flex gap-2 text-xs pt-4 border-t border-white/10">
-        <div className="flex items-center gap-2">
-          <CircleCheck className="w-4 h-4 text-emerald-500" />
-          <span className="text-slate-300">Available</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CircleX className="w-4 h-4 text-rose-500" />
-          <span className="text-slate-300">Occupied</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CircleDashed className="w-4 h-4 text-amber-500" />
-          <span className="text-slate-300">Cleaning</span>
-        </div>
+      <div className="flex flex-wrap gap-2 border-t border-slate-100 pt-4 text-xs">
+        <Badge tone="success" className="gap-1 px-2.5 py-1">
+          <BedDouble className="h-3.5 w-3.5" /> Available
+        </Badge>
+        <Badge tone="danger" className="gap-1 px-2.5 py-1">
+          <User className="h-3.5 w-3.5" /> Occupied
+        </Badge>
+        <Badge tone="warning" className="gap-1 px-2.5 py-1">
+          <SprayCan className="h-3.5 w-3.5" /> Cleaning
+        </Badge>
       </div>
     </div>
   );

@@ -670,6 +670,100 @@ async def book_bed(
             detail=str(e)
         )
 
+@app.post("/api/beds/{bed_id}/discharge")
+async def discharge_bed(
+    bed_id: str,
+    current_admin: Dict = Depends(get_current_admin)
+):
+    """
+    Discharge a patient from a bed: sets status to 'cleaning' and clears occupant.
+    Only the hospital's admin with full_access can discharge.
+    """
+    try:
+        verify_full_access(current_admin)
+        beds = db.get_beds()
+        bed = next((b for b in beds if str(b["id"]) == str(bed_id)), None)
+        if not bed:
+            raise HTTPException(status_code=404, detail="Bed not found")
+        if str(bed["hospital_id"]) != str(current_admin["hospital_id"]):
+            raise HTTPException(status_code=403, detail="You can only manage beds in your hospital")
+        if bed["status"] != "occupied":
+            raise HTTPException(status_code=400, detail="Bed is not currently occupied")
+
+        db.update_bed(bed_id, "cleaning", "", 30)
+        return {
+            "success": True,
+            "message": f"Patient discharged from bed {bed_id}. Bed marked for cleaning.",
+            "bed_id": bed_id,
+            "new_status": "cleaning",
+            "timestamp": datetime.now().isoformat()
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/beds/{bed_id}/set-cleaning")
+async def set_bed_cleaning(
+    bed_id: str,
+    current_admin: Dict = Depends(get_current_admin)
+):
+    """Mark a bed as cleaning."""
+    try:
+        verify_full_access(current_admin)
+        beds = db.get_beds()
+        bed = next((b for b in beds if str(b["id"]) == str(bed_id)), None)
+        if not bed:
+            raise HTTPException(status_code=404, detail="Bed not found")
+        if str(bed["hospital_id"]) != str(current_admin["hospital_id"]):
+            raise HTTPException(status_code=403, detail="You can only manage beds in your hospital")
+
+        db.update_bed(bed_id, "cleaning", "", 30)
+        return {
+            "success": True,
+            "message": f"Bed {bed_id} marked for cleaning.",
+            "bed_id": bed_id,
+            "new_status": "cleaning",
+            "timestamp": datetime.now().isoformat()
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/beds/{bed_id}/set-available")
+async def set_bed_available(
+    bed_id: str,
+    current_admin: Dict = Depends(get_current_admin)
+):
+    """Mark a cleaned bed as available."""
+    try:
+        verify_full_access(current_admin)
+        beds = db.get_beds()
+        bed = next((b for b in beds if str(b["id"]) == str(bed_id)), None)
+        if not bed:
+            raise HTTPException(status_code=404, detail="Bed not found")
+        if str(bed["hospital_id"]) != str(current_admin["hospital_id"]):
+            raise HTTPException(status_code=403, detail="You can only manage beds in your hospital")
+        if bed["status"] != "cleaning":
+            raise HTTPException(status_code=400, detail="Bed must be in cleaning status first")
+
+        db.update_bed(bed_id, "available", "", 0)
+        return {
+            "success": True,
+            "message": f"Bed {bed_id} is now available.",
+            "bed_id": bed_id,
+            "new_status": "available",
+            "timestamp": datetime.now().isoformat()
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.on_event("startup")
 async def startup():
     print("🚀 Starting Hospital Digital Twin API...")

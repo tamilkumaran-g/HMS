@@ -1,46 +1,142 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
+@import "./styles/design-system.css";
 @import "tailwindcss";
 
 :root {
   color-scheme: light;
-  --ink: #0b1320;
-  --sky: #0f172a;
-  --accent: #ffb703;
+  --card: #ffffff;
+  --card-border: #e2e8f0;
+  --primary: #4f46e5;
+  --accent: #0ea5e9;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
-  background: radial-gradient(
-    circle at top,
-    #1e293b 0%,
-    #0b1120 45%,
-    #070b14 100%
-  );
-  color: #f8fafc;
+  font-family: "Plus Jakarta Sans", "DM Sans", "Segoe UI", sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
 }
 
 .font-display {
-  font-family: "DM Serif Display", "Times New Roman", serif;
+  font-family: "Plus Jakarta Sans", "DM Sans", sans-serif;
+  font-weight: 700;
   letter-spacing: 0.01em;
 }
 
 .bg-app {
-  background-image:
-    radial-gradient(
-      circle at 10% 20%,
-      rgba(255, 183, 3, 0.15),
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 90% 0%,
-      rgba(56, 189, 248, 0.18),
-      transparent 40%
-    ),
-    linear-gradient(140deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.9));
+  background: #f8fafc;
 }
 
-body {
-  font-family: "Bricolage Grotesque", sans-serif;
+.glass-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 3px 0 rgba(0,0,0,0.06),
+    0 2px 8px rgba(0,0,0,0.03);
+  transition:
+    box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Bento shimmer sweep on hover */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transition: left 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-card:hover::before {
+  left: 100%;
+}
+
+.glass-card:hover {
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.06),
+    0 8px 24px rgba(0,0,0,0.04);
+  border-color: #d0d5dd;
+}
+
+/* ── Tone-colored glow on hover ── */
+.glass-card.glow-primary::before {
+  background: linear-gradient(90deg, transparent, rgba(79,70,229,0.10), transparent);
+}
+.glass-card.glow-primary:hover {
+  border-color: #c7d2fe;
+  box-shadow: 0 4px 16px rgba(79,70,229,0.10), 0 8px 24px rgba(79,70,229,0.06);
+}
+
+.glass-card.glow-success::before {
+  background: linear-gradient(90deg, transparent, rgba(22,163,74,0.10), transparent);
+}
+.glass-card.glow-success:hover {
+  border-color: #bbf7d0;
+  box-shadow: 0 4px 16px rgba(22,163,74,0.10), 0 8px 24px rgba(22,163,74,0.06);
+}
+
+.glass-card.glow-danger::before {
+  background: linear-gradient(90deg, transparent, rgba(220,38,38,0.10), transparent);
+}
+.glass-card.glow-danger:hover {
+  border-color: #fecaca;
+  box-shadow: 0 4px 16px rgba(220,38,38,0.10), 0 8px 24px rgba(220,38,38,0.06);
+}
+
+.glass-card.glow-warning::before {
+  background: linear-gradient(90deg, transparent, rgba(217,119,6,0.10), transparent);
+}
+.glass-card.glow-warning:hover {
+  border-color: #fde68a;
+  box-shadow: 0 4px 16px rgba(217,119,6,0.10), 0 8px 24px rgba(217,119,6,0.06);
+}
+
+.glass-card.glow-accent::before {
+  background: linear-gradient(90deg, transparent, rgba(14,165,233,0.10), transparent);
+}
+.glass-card.glow-accent:hover {
+  border-color: #bae6fd;
+  box-shadow: 0 4px 16px rgba(14,165,233,0.10), 0 8px 24px rgba(14,165,233,0.06);
+}
+
+.soft-shadow {
+  box-shadow:
+    0 2px 6px -1px rgba(0,0,0,0.06),
+    0 4px 12px -2px rgba(0,0,0,0.04);
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Mobile touch improvements */
+@media (max-width: 640px) {
+  .glass-card {
+    border-radius: 12px;
+  }
+}
+
+/* Ensure all content respects viewport */
+html, body, #root {
+  overflow-x: hidden;
+  width: 100%;
 }

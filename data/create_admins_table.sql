@@ -27,7 +27,7 @@ CREATE INDEX idx_admins_hospital_id ON admins(hospital_id);
 INSERT INTO admins (username, password_hash, hospital_id, role) VALUES
 ('admin_city', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYqYC8cJ9bG', 'City_Hospital', 'full_access'),
 ('admin_regional', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn98z8Y4RQCxBBaxk8f1g5yPkqZ.', 'Regional_Medical', 'full_access'),
-('admin_metro', '$2b$12$wKBpZW3gGjL9Q8E5z5xL5OmG8F3sD3KrQE7k.HbF8QjN1YpQ7P8Hy', 'Metro_Health', 'full_access');
+('admin_metro', '$2b$12$wiVy/wy/sUvoc6OGyMHlvOZIEQrRR76.EqMyExAgGk6CJU0GuKrdm', 'Metro_Health', 'full_access');
 
 -- Note: In production, you should generate these hashes securely
 -- The hashes above correspond to:

@@ -405,7 +405,7 @@ class PostgresDatabase:
         Get pending notifications for a hospital (cross-hospital requests).
         
         Args:
-            hospital_id: The hospital ID (will be converted to int)
+            hospital_id: The hospital ID
             
         Returns:
             List of pending notifications for this hospital
@@ -415,12 +415,7 @@ class PostgresDatabase:
             WHERE to_hospital_id = %s AND status = 'pending'
             ORDER BY created_at DESC
         """
-        try:
-            hospital_id_int = int(hospital_id)
-            return self.execute_query(query, (hospital_id_int,), fetch=True)
-        except (ValueError, TypeError):
-            print(f"⚠️ Invalid hospital_id: {hospital_id}")
-            return []
+        return self.execute_query(query, (str(hospital_id),), fetch=True)
     
     def get_notification_by_id(self, notification_id: int) -> Optional[Dict]:
         """

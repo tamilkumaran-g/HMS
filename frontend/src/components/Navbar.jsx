@@ -13,8 +13,8 @@ const Navbar = () => {
   const linkClass = ({ isActive }) =>
     `inline-flex items-center rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
       isActive
-        ? "border-white/40 bg-white/20 text-white"
-        : "border-white/15 bg-white/5 text-slate-200 hover:bg-white/15"
+        ? "border-indigo-200 bg-indigo-50 text-indigo-700"
+        : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
     }`;
 
   const handleLogout = () => {
@@ -25,20 +25,20 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/5 px-6 py-4">
+    <nav className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-slate-200 bg-white px-6 py-4">
       {/* Left side - Hospital info */}
       <div className="flex flex-col gap-1">
-        <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-300">
+        <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-700">
           {hospitalName}
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-slate-500">
           <span className="capitalize">{username}</span>
           <span>•</span>
           <span
             className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
               role === "full_access"
-                ? "bg-green-500/20 text-green-300"
-                : "bg-blue-500/20 text-blue-300"
+                ? "bg-green-50 text-green-700"
+                : "bg-blue-50 text-blue-700"
             }`}
           >
             {role === "full_access" ? "Full Access" : "View Only"}
@@ -64,7 +64,7 @@ const Navbar = () => {
         {/* Logout button */}
         <button
           onClick={handleLogout}
-          className="inline-flex items-center rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-red-300 transition hover:bg-red-500/20"
+          className="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-red-600 transition hover:bg-red-100"
         >
           Logout
         </button>

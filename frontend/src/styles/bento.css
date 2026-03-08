@@ -1,0 +1,310 @@
+/* ───────────────────────────────────────────────
+   Magic Bento Grid – Hospital Management System
+   ─────────────────────────────────────────────── */
+
+/* === Grid Layout === */
+.bento-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto;
+}
+
+/* Tablet: 2-col */
+@media (min-width: 640px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* Desktop: 4-col with named areas */
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 1.25rem;
+  }
+
+  .bento-grid .bento-span-2 {
+    grid-column: span 2;
+  }
+
+  .bento-grid .bento-span-3 {
+    grid-column: span 3;
+  }
+
+  .bento-grid .bento-span-4 {
+    grid-column: span 4;
+  }
+
+  .bento-grid .bento-row-2 {
+    grid-row: span 2;
+  }
+}
+
+/* === Bento Card Surface === */
+.bento-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  border: 1px solid #e8ecf1;
+  padding: 1.5rem;
+  transition:
+    box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.bento-card:hover {
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.04);
+  border-color: #d0d5dd;
+}
+
+/* Subtle gradient shimmer effect on hover */
+.bento-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bento-card:hover::before {
+  left: 100%;
+}
+
+/* === Card Header === */
+.bento-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.bento-card-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: 0.01em;
+}
+
+.bento-card-header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+}
+
+/* === Icon Container === */
+.bento-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.875rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.bento-card:hover .bento-icon {
+  transform: scale(1.05);
+}
+
+/* Tone variants */
+.bento-icon-primary {
+  background: #eef2ff;
+  border: 1px solid #e0e7ff;
+  color: #4f46e5;
+}
+
+.bento-icon-success {
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  color: #16a34a;
+}
+
+.bento-icon-danger {
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #dc2626;
+}
+
+.bento-icon-warning {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  color: #d97706;
+}
+
+.bento-icon-accent {
+  background: #f0f9ff;
+  border: 1px solid #e0f2fe;
+  color: #0284c7;
+}
+
+.bento-icon-neutral {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+/* === Stat Value === */
+.bento-stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.bento-stat-suffix {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #475569;
+  margin-left: 2px;
+}
+
+/* === Quick-link List inside bento cards === */
+.bento-link-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bento-link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  text-decoration: none;
+}
+
+.bento-link-item:hover {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #4f46e5;
+}
+
+.bento-link-item svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* === Mini Badge inside bento cards === */
+.bento-mini-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.bento-mini-badge-success {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.bento-mini-badge-danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.bento-mini-badge-warning {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.bento-mini-badge-primary {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* === Hospital mini-card inside bento === */
+.bento-hospital-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.bento-hospital-row:last-child {
+  border-bottom: none;
+}
+
+/* === Progress bar === */
+.bento-progress-track {
+  height: 6px;
+  width: 100%;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.bento-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === Dot pulse animation for system status === */
+@keyframes bento-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.bento-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  animation: bento-pulse 2s ease-in-out infinite;
+}
+
+/* === Responsive card padding === */
+@media (max-width: 640px) {
+  .bento-card {
+    padding: 1.125rem;
+    border-radius: 1rem;
+  }
+
+  .bento-stat-value {
+    font-size: 1.625rem;
+  }
+
+  .bento-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.625rem;
+  }
+}

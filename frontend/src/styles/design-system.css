@@ -1,0 +1,304 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Core */
+  --primary: #4f46e5;
+  --secondary: #6366f1;
+  --accent: #0ea5e9;
+
+  /* Background system */
+  --bg-main: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-surface: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-hover: #e2e8f0;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: #e2e8f0;
+  --glass-highlight: #cbd5e1;
+
+  /* Status */
+  --bed-available: #16a34a;
+  --bed-occupied: #dc2626;
+  --bed-cleaning: #d97706;
+
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #0284c7;
+
+  /* Text */
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-disabled: #cbd5e1;
+
+  /* Borders */
+  --border-light: #e2e8f0;
+  --border-glass: #cbd5e1;
+  --border-divider: #f1f5f9;
+
+  /* Spacing */
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Radius */
+  --radius-card: 16px;
+  --radius-sm: 10px;
+
+  /* Shadows */
+  --shadow-soft: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
+  --shadow-hover: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+}
+
+.ds-root {
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", "Inter", "Segoe UI", sans-serif;
+}
+
+/* Typography scale */
+.ds-page-title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 600;
+}
+
+.ds-section-title {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+.ds-card-title {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+}
+
+.ds-body {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.ds-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Glass and card surfaces */
+.ds-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+}
+
+.ds-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.ds-card:hover {
+  border-color: var(--glass-border);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+/* Buttons */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 120ms ease;
+}
+
+.ds-btn:active {
+  transform: scale(0.98);
+}
+
+.ds-btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.ds-btn-primary:hover {
+  background: #4338ca;
+}
+
+.ds-btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+.ds-btn-secondary:hover {
+  background: var(--bg-hover);
+}
+
+.ds-btn-danger {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.ds-btn-danger:hover {
+  background: #b91c1c;
+}
+
+/* Badges */
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ds-badge-available {
+  background: rgba(22, 163, 74, 0.2);
+  color: var(--success);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+.ds-badge-occupied {
+  background: rgba(220, 38, 38, 0.2);
+  color: var(--danger);
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.ds-badge-cleaning {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+/* Forms */
+.ds-input,
+.ds-select,
+.ds-textarea {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.ds-input:focus,
+.ds-select:focus,
+.ds-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* Bed seat tiles */
+.ds-bed-tile {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  transition: transform 120ms ease, border-color 120ms ease;
+}
+
+.ds-bed-tile:hover {
+  transform: translateY(-1px);
+  border-color: var(--glass-highlight);
+}
+
+.ds-bed-available {
+  border-color: rgba(22, 163, 74, 0.3);
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.ds-bed-occupied {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.ds-bed-cleaning {
+  border-color: rgba(217, 119, 6, 0.3);
+  background: rgba(217, 119, 6, 0.08);
+}
+
+/* Notification urgency rail */
+.ds-notify {
+  position: relative;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  overflow: hidden;
+}
+
+.ds-notify::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--info);
+}
+
+.ds-notify-emergency::before {
+  background: var(--danger);
+}
+
+.ds-notify-warning::before {
+  background: var(--warning);
+}
+
+/* Layout helpers */
+.ds-shell {
+  background: var(--bg-main);
+}
+
+.ds-sidebar {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-divider);
+}
+
+.ds-topbar {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+}
+
+.ds-main-grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.ds-metrics-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .ds-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .ds-metrics-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
